@@ -1,0 +1,128 @@
+version: '3.9'
+
+services:
+  # ── PostgreSQL Database ───────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: afroglow_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       afroglow
+      POSTGRES_USER:     afroglow_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-afroglow_secret_2024}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U afroglow_user -d afroglow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis (cache + sessions) ──────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: afroglow_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_secret_2024}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── NestJS API ────────────────────────────────────────
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: afroglow_api
+    restart: unless-stopped
+    env_file: ./apps/api/.env
+    environment:
+      DATABASE_URL: postgresql://afroglow_user:${DB_PASSWORD:-afroglow_secret_2024}@postgres:5432/afroglow
+      REDIS_URL:    redis://:${REDIS_PASSWORD:-redis_secret_2024}@redis:6379
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - api_uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Next.js Frontend ──────────────────────────────────
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: afroglow_web
+    restart: unless-stopped
+    env_file: ./apps/web/.env
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:4000/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Nginx Reverse Proxy ───────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: afroglow_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - web
+      - api
+
+  # ── pgAdmin (Development only) ────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: afroglow_pgadmin
+    restart: unless-stopped
+    profiles: ["dev"]
+    environment:
+      PGADMIN_DEFAULT_EMAIL:    admin@afroglow.lt
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-pgadmin_secret}
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  api_uploads:
+    driver: local
+  nginx_logs:
+    driver: local
+
+networks:
+  default:
+    name: afroglow_network

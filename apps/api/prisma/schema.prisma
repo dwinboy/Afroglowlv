@@ -1,0 +1,493 @@
+// ═══════════════════════════════════════════════════════
+//  AFROGLOW — Prisma Schema
+//  Luxury Salon & Chair Rental Marketplace
+//  Production-ready, multi-branch scalable architecture
+// ═══════════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ── Enums ─────────────────────────────────────────────
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  BARBER
+  CUSTOMER
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum ApplicationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  WAITLISTED
+}
+
+enum RentalPlan {
+  DAILY
+  WEEKLY
+  MONTHLY
+  CUSTOM
+}
+
+enum RentalStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  EXPIRED
+  PENDING
+}
+
+enum ContractStatus {
+  DRAFT
+  SENT
+  SIGNED
+  ACTIVE
+  EXPIRED
+  TERMINATED
+}
+
+enum NotificationType {
+  BOOKING_NEW
+  BOOKING_UPDATED
+  BOOKING_REMINDER
+  BOOKING_CANCELLED
+  APPLICATION_RECEIVED
+  APPLICATION_APPROVED
+  APPLICATION_REJECTED
+  RENTAL_EXPIRING
+  RENTAL_RENEWED
+  PAYMENT_RECEIVED
+  REVIEW_NEW
+  BROADCAST
+  SYSTEM
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentMethod {
+  CARD
+  BANK_TRANSFER
+  CASH
+  STRIPE
+  PAYPAL
+}
+
+// ── Models ─────────────────────────────────────────────
+
+// ─── Branch (Multi-location support) ──────────────────
+model Branch {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  city        String
+  country     String   @default("Lithuania")
+  phone       String?
+  email       String?
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  lat         Float?
+  lng         Float?
+  openingHours Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  spots        RentalSpot[]
+  bookings     Booking[]
+  professionals Professional[]
+  services     Service[]
+
+  @@map("branches")
+}
+
+// ─── User ─────────────────────────────────────────────
+model User {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  fullName            String
+  passwordHash        String?
+  phone               String?
+  avatarUrl           String?
+  bio                 String?
+  role                UserRole  @default(CUSTOMER)
+  googleId            String?   @unique
+  isVerified          Boolean   @default(false)
+  isActive            Boolean   @default(true)
+  suspensionReason    String?
+  lastLoginAt         DateTime?
+  emailVerifiedAt     DateTime?
+  passwordResetToken  String?   @unique
+  passwordResetExpiry DateTime?
+  locale              String    @default("en")
+  loyaltyPoints       Int       @default(0)
+  referralCode        String?   @unique
+  referredBy          String?
+  gdprConsentAt       DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  professional    Professional?
+  customerBookings Booking[]      @relation("CustomerBookings")
+  reviews         Review[]        @relation("AuthorReviews")
+  notifications   Notification[]
+  payments        Payment[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+// ─── Professional (Barber/Hairdresser) ────────────────
+model Professional {
+  id                String      @id @default(cuid())
+  userId            String      @unique
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  branchId          String?
+  branch            Branch?     @relation(fields: [branchId], references: [id])
+  specialization    String?
+  yearsOfExperience Int         @default(0)
+  bio               String?
+  languages         String[]    @default([])
+  instagramHandle   String?
+  portfolioVideoUrl String?
+  avgRating         Float       @default(0)
+  reviewCount       Int         @default(0)
+  rentalSpotId      String?     @unique
+  rentalSpot        RentalSpot? @relation(fields: [rentalSpotId], references: [id])
+  rentalPlan        RentalPlan?
+  rentalStatus      RentalStatus @default(PENDING)
+  rentalStartDate   DateTime?
+  rentalEndDate     DateTime?
+  isAvailableNow    Boolean     @default(false)
+  permissions       Json?       // { canAcceptBookings, canManageServices, canViewEarnings, canManagePortfolio, canAccessCalendar, canReceiveReviews }
+  adminNotes        String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  services     Service[]    @relation("ProfessionalServices")
+  bookings     Booking[]    @relation("ProfessionalBookings")
+  portfolio    Portfolio[]
+  reviews      Review[]
+  availability Availability[]
+  contracts    Contract[]
+  payments     Payment[]
+
+  @@index([rentalStatus])
+  @@map("professionals")
+}
+
+// ─── Rental Spot ──────────────────────────────────────
+model RentalSpot {
+  id           String   @id @default(cuid())
+  spotNumber   String
+  type         String   @default("CHAIR")
+  description  String?
+  isAvailable  Boolean  @default(true)
+  floor        Int?
+  imageUrl     String?
+  dailyRate    Float    @default(35)
+  weeklyRate   Float    @default(180)
+  monthlyRate  Float    @default(600)
+  amenities    String[] @default([])
+  branchId     String?
+  branch       Branch?  @relation(fields: [branchId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  professional Professional?
+
+  @@unique([spotNumber, branchId])
+  @@map("rental_spots")
+}
+
+// ─── Rental Application ───────────────────────────────
+model RentalApplication {
+  id               String            @id @default(cuid())
+  fullName         String
+  email            String
+  phone            String
+  profession       String
+  yearsExperience  String
+  specialization   String
+  instagramHandle  String?
+  portfolioUrls    String[]          @default([])
+  rentalDuration   String
+  startDate        String
+  message          String
+  status           ApplicationStatus @default(PENDING)
+  rejectionReason  String?
+  internalNotes    String?
+  reviewedAt       DateTime?
+  reviewedBy       String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@map("rental_applications")
+}
+
+// ─── Service ──────────────────────────────────────────
+model Service {
+  id           String   @id @default(cuid())
+  name         String
+  category     String
+  description  String?
+  price        Float
+  duration     Int      // minutes
+  icon         String?
+  imageUrl     String?
+  isActive     Boolean  @default(true)
+  isPopular    Boolean  @default(false)
+  branchId     String?
+  branch       Branch?  @relation(fields: [branchId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  professionals Professional[] @relation("ProfessionalServices")
+  bookings     Booking[]
+
+  @@index([category])
+  @@map("services")
+}
+
+// ─── Booking ──────────────────────────────────────────
+model Booking {
+  id             String        @id @default(cuid())
+  serviceId      String
+  service        Service       @relation(fields: [serviceId], references: [id])
+  professionalId String
+  professional   Professional  @relation("ProfessionalBookings", fields: [professionalId], references: [id])
+  customerId     String?
+  customer       User?         @relation("CustomerBookings", fields: [customerId], references: [id])
+  branchId       String?
+  branch         Branch?       @relation(fields: [branchId], references: [id])
+
+  // Guest booking support (no account required)
+  guestName      String?
+  guestEmail     String?
+  guestPhone     String?
+
+  date           String        // YYYY-MM-DD
+  time           String        // HH:MM
+  durationMins   Int?
+  notes          String?
+  status         BookingStatus @default(PENDING)
+  totalAmount    Float?
+  reminderSent   Boolean       @default(false)
+  checkedInAt    DateTime?
+  completedAt    DateTime?
+  cancelledAt    DateTime?
+  noShowAt       DateTime?
+  cancellationReason String?
+
+  payment        Payment?
+  review         Review?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([date])
+  @@index([status])
+  @@index([professionalId])
+  @@index([customerId])
+  @@map("bookings")
+}
+
+// ─── Portfolio ────────────────────────────────────────
+model Portfolio {
+  id             String   @id @default(cuid())
+  professionalId String
+  professional   Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  imageUrl       String
+  videoUrl       String?
+  caption        String?
+  serviceType    String?
+  tags           String[] @default([])
+  likes          Int      @default(0)
+  isPublic       Boolean  @default(true)
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  @@map("portfolios")
+}
+
+// ─── Review ───────────────────────────────────────────
+model Review {
+  id             String   @id @default(cuid())
+  professionalId String
+  professional   Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  authorId       String
+  author         User     @relation("AuthorReviews", fields: [authorId], references: [id])
+  bookingId      String?  @unique
+  booking        Booking? @relation(fields: [bookingId], references: [id])
+  rating         Int      // 1-5
+  comment        String
+  isVisible      Boolean  @default(true)
+  response       String?  // Professional reply
+  respondedAt    DateTime?
+  reportedAt     DateTime?
+  reportReason   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([professionalId])
+  @@index([authorId])
+  @@map("reviews")
+}
+
+// ─── Availability ─────────────────────────────────────
+model Availability {
+  id             String  @id @default(cuid())
+  professionalId String
+  professional   Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  dayOfWeek      Int     // 0=Sunday, 1=Monday...6=Saturday
+  startTime      String  // "09:00"
+  endTime        String  // "21:00"
+  isAvailable    Boolean @default(true)
+  breakStart     String? // "13:00"
+  breakEnd       String? // "14:00"
+
+  @@unique([professionalId, dayOfWeek])
+  @@map("availability")
+}
+
+// ─── Payment ──────────────────────────────────────────
+model Payment {
+  id              String        @id @default(cuid())
+  bookingId       String?       @unique
+  booking         Booking?      @relation(fields: [bookingId], references: [id])
+  userId          String?
+  user            User?         @relation(fields: [userId], references: [id])
+  professionalId  String?
+  professional    Professional? @relation(fields: [professionalId], references: [id])
+  amount          Float
+  currency        String        @default("EUR")
+  status          PaymentStatus @default(PENDING)
+  method          PaymentMethod @default(CARD)
+  stripePaymentId String?       @unique
+  stripeSessionId String?
+  description     String?
+  refundedAmount  Float?
+  refundedAt      DateTime?
+  type            String        @default("BOOKING") // BOOKING | RENTAL_FEE
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status])
+  @@index([userId])
+  @@map("payments")
+}
+
+// ─── Contract ─────────────────────────────────────────
+model Contract {
+  id              String         @id @default(cuid())
+  professionalId  String
+  professional    Professional   @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  title           String
+  documentUrl     String?
+  content         String?
+  status          ContractStatus @default(DRAFT)
+  rentalPlan      RentalPlan
+  startDate       DateTime
+  endDate         DateTime?
+  monthlyRate     Float
+  signedAt        DateTime?
+  expiresAt       DateTime?
+  terminatedAt    DateTime?
+  terminationNote String?
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([status])
+  @@map("contracts")
+}
+
+// ─── Notification ─────────────────────────────────────
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  title     String
+  body      String
+  metadata  Json?
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+// ─── Loyalty ──────────────────────────────────────────
+model LoyaltyTransaction {
+  id         String   @id @default(cuid())
+  userId     String
+  points     Int
+  type       String   // EARN | REDEEM
+  reason     String
+  bookingId  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@map("loyalty_transactions")
+}
+
+// ─── Referral ─────────────────────────────────────────
+model Referral {
+  id           String   @id @default(cuid())
+  referrerId   String
+  referredId   String
+  rewardPoints Int      @default(100)
+  isRewarded   Boolean  @default(false)
+  rewardedAt   DateTime?
+  createdAt    DateTime @default(now())
+
+  @@unique([referrerId, referredId])
+  @@map("referrals")
+}
+
+// ─── Analytics Snapshot ───────────────────────────────
+model AnalyticsSnapshot {
+  id                 String   @id @default(cuid())
+  date               String   // YYYY-MM-DD
+  branchId           String?
+  totalBookings      Int      @default(0)
+  completedBookings  Int      @default(0)
+  cancelledBookings  Int      @default(0)
+  totalRevenue       Float    @default(0)
+  occupancyRate      Float    @default(0)
+  newCustomers       Int      @default(0)
+  activeRenters      Int      @default(0)
+  topServiceId       String?
+  createdAt          DateTime @default(now())
+
+  @@unique([date, branchId])
+  @@map("analytics_snapshots")
+}
