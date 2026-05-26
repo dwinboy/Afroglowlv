@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -45,7 +44,6 @@ const MONTH_NAMES = ['January','February','March','April','May','June',
   'July','August','September','October','November','December']
 
 export default function BookingPage() {
-  const params = useSearchParams()
   const [step, setStep] = useState(0)
 
   // Live data
