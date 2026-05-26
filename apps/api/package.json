@@ -28,6 +28,7 @@
     "@nestjs/event-emitter": "^2.0.4",
     "@nestjs/schedule":     "^4.0.2",
     "@prisma/client":       "^5.15.0",
+    "cloudinary":           "^2.2.0",
     "passport":             "^0.7.0",
     "passport-jwt":         "^4.0.1",
     "passport-local":       "^1.0.0",

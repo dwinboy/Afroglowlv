@@ -18,26 +18,26 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Upload avatar image' })
-  uploadAvatar(@UploadedFile() file: Express.Multer.File) {
+  async uploadAvatar(@UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('File is required')
-    return this.uploadService.getFileUrl(file)
+    return this.uploadService.uploadFile(file, 'afroglow/avatars')
   }
 
   @Post('portfolio')
   @UseInterceptors(FilesInterceptor('files', 10))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Upload portfolio images (max 10)' })
-  uploadPortfolio(@UploadedFiles() files: Express.Multer.File[]) {
+  async uploadPortfolio(@UploadedFiles() files: Express.Multer.File[]) {
     if (!files?.length) throw new BadRequestException('Files are required')
-    return files.map(f => this.uploadService.getFileUrl(f))
+    return Promise.all(files.map(f => this.uploadService.uploadFile(f, 'afroglow/portfolio')))
   }
 
   @Post('document')
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Upload a document (PDF)' })
-  uploadDocument(@UploadedFile() file: Express.Multer.File) {
+  async uploadDocument(@UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('File is required')
-    return this.uploadService.getFileUrl(file)
+    return this.uploadService.uploadFile(file, 'afroglow/documents')
   }
 }
