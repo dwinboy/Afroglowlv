@@ -25,9 +25,7 @@ async function bootstrap() {
 
   app.use(helmet({
     crossOriginEmbedderPolicy: false,
-    contentSecurityPolicy: {
-      directives: { defaultSrc: ["'self'"], imgSrc: ["'self'", 'data:', 'https:'] },
-    },
+    contentSecurityPolicy: false,
   }))
 
   app.enableCors({
