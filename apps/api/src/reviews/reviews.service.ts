@@ -14,7 +14,6 @@ export class ReviewsService {
         include: {
           author:       { select: { fullName: true, avatarUrl: true } },
           professional: { include: { user: { select: { fullName: true } } } },
-          service:      { select: { name: true } },
         },
       }),
       this.prisma.review.count(),
