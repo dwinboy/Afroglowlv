@@ -12,7 +12,7 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { cn } from '@/lib/utils'
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api'
+const API = process.env.NEXT_PUBLIC_API_URL ?? 'https://afroglowlv-api.vercel.app/api'
 
 const DEFAULT_PERMISSIONS = {
   canAcceptBookings:  true,
