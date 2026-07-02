@@ -257,104 +257,13 @@ Transactional emails include:
 
 ## 🚢 Deployment
 
-### Vercel frontend + Railway backend + PostgreSQL
+The recommended production setup is:
 
-Deploy the backend first so the frontend can point to its public API URL.
+- Frontend: Vercel
+- Backend: Railway
+- Database: Railway PostgreSQL
 
-#### Railway backend
-
-Create a Railway project from this repository and keep the project root at the repository root so `railway.json` can build `@afroglow/api`.
-
-Required Railway variables:
-
-- `NODE_ENV=production`
-- `PORT=4000`
-- `DATABASE_URL=postgresql://...`
-- `DIRECT_URL=postgresql://...`
-- `JWT_SECRET=<strong random secret>`
-- `REFRESH_TOKEN_SECRET=<strong random secret>`
-- `FRONTEND_URL=https://<your-vercel-app>.vercel.app`
-- `FRONTEND_URLS=https://<your-custom-domain>,https://<your-vercel-app>.vercel.app`
-- `API_URL=https://<your-railway-domain>`
-- `SMTP_*`, `STRIPE_*`, and `CLOUDINARY_*` as needed for live features
-
-After the first Railway deploy, initialize the database schema once:
-
-```bash
-railway run npm --workspace @afroglow/api run prisma:push
-```
-
-For long-term production change management, add and commit Prisma migrations, then switch deploy-time schema changes to `prisma migrate deploy`.
-
-#### Vercel frontend
-
-Create a Vercel project with root directory `apps/web`.
-
-Required Vercel variables:
-
-- `NEXT_PUBLIC_API_URL=https://<your-railway-domain>/api`
-- `NEXT_PUBLIC_APP_URL=https://<your-vercel-app>.vercel.app`
-- `NEXT_PUBLIC_APP_NAME=Afroglow`
-- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=<optional>`
-- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=<optional>`
-- `NEXT_PUBLIC_GA_MEASUREMENT_ID=<optional>`
-
-Then redeploy the frontend after the Railway API URL is stable.
-
-### Production with Docker
-
-```bash
-# Build and start
-docker-compose -f docker-compose.yml up -d --build
-
-# Run migrations
-docker-compose exec api npx prisma migrate deploy
-
-# Check health
-curl https://afroglow.lt/api/health
-```
-
-### Environment Variables (Production checklist)
-
-- [ ] `JWT_SECRET` — Strong, random 64-char string
-- [ ] `DATABASE_URL` — Production PostgreSQL connection
-- [ ] `SMTP_*` — Production SMTP settings
-- [ ] `STRIPE_SECRET_KEY` — Live Stripe key
-- [ ] `CLOUDINARY_*` — For production file storage
-
-### Vercel (Web) + Neon (Database) setup
-
-1. Deploy API first (Render/Railway/Fly.io/VPS).
-
-2. Create Neon database and copy both connection strings:
-  - pooled URL -> `DATABASE_URL`
-  - direct URL -> `DIRECT_URL`
-
-3. API production env values:
-  - `DATABASE_URL` = Neon pooled URL (with `sslmode=require`)
-  - `DIRECT_URL` = Neon direct URL (with `sslmode=require`)
-  - `FRONTEND_URL` = your Vercel app URL
-  - `FRONTEND_URLS` = comma-separated additional frontend URLs (custom domain + preview if needed)
-  - `API_URL` = public API base domain
-
-4. Run Prisma in production from API deployment target:
-
-```bash
-npx prisma generate
-npx prisma migrate deploy
-```
-
-5. Deploy web app on Vercel:
-  - Framework preset: Next.js
-  - Root directory: `apps/web`
-  - Build command: `npm run build`
-  - Install command: `npm install`
-  - Environment variable: `NEXT_PUBLIC_API_URL=https://<api-domain>/api`
-
-6. Verify production:
-  - Open `https://<api-domain>/api/health`
-  - Test login/register from Vercel domain
-  - Test booking + rental application flows
+Follow [DEPLOYMENT.md](./DEPLOYMENT.md) for the exact copy-paste settings, environment variables, database setup, seed command, and verification checklist.
 
 ---
 
