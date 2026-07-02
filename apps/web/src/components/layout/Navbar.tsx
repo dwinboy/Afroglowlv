@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ChevronDown, Globe, User, LogOut, LayoutDashboard, Shield } from 'lucide-react'
+import { Menu, X, ChevronDown, Globe, User, LogOut, LayoutDashboard, Shield, Moon, Sun } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useI18n } from '@/contexts/I18nContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import { cn } from '@/lib/utils'
 
 const navLinks = (t: ReturnType<typeof useI18n>['t']) => [
@@ -24,6 +25,7 @@ export default function Navbar() {
   const pathname = usePathname()
   const { user, logout, isAuthenticated } = useAuth()
   const { t, locale, setLocale } = useI18n()
+  const { theme, toggleTheme } = useTheme()
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20)
@@ -75,6 +77,18 @@ export default function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-400
+                         hover:text-gold-400 hover:bg-gold-500/10
+                         border border-luxury-border hover:border-gold-500/30
+                         transition-all duration-200"
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            >
+              {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+            </button>
+
             {/* Language Toggle */}
             <button
               onClick={() => setLocale(locale === 'en' ? 'lt' : 'en')}
@@ -227,6 +241,15 @@ export default function Navbar() {
                     </Link>
                   </>
                 )}
+
+                <button
+                  onClick={toggleTheme}
+                  className="flex w-full items-center gap-2 px-4 py-3 text-sm text-gray-400 hover:text-gold-400"
+                  aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                  {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+                </button>
 
                 <button
                   onClick={() => setLocale(locale === 'en' ? 'lt' : 'en')}

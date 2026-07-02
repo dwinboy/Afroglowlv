@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { I18nProvider } from '@/contexts/I18nContext'
+import { ThemeProvider } from '@/contexts/ThemeContext'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -65,32 +66,50 @@ export const viewport: Viewport = {
   themeColor:        '#D4AF37',
 }
 
+const themeInitScript = `
+(() => {
+  try {
+    const saved = localStorage.getItem('afroglow_theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    const theme = saved === 'light' || saved === 'dark' ? saved : (prefersLight ? 'light' : 'dark');
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(theme);
+    document.documentElement.style.colorScheme = theme;
+  } catch (_) {}
+})();
+`
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
-        <I18nProvider>
-          <AuthProvider>
-            {children}
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                style: {
-                  background: '#1E1E1E',
-                  color:      '#fff',
-                  border:     '1px solid #2A2A2A',
-                  borderRadius:'12px',
-                },
-                success: {
-                  iconTheme: { primary: '#D4AF37', secondary: '#000' },
-                },
-                error: {
-                  iconTheme: { primary: '#ef4444', secondary: '#fff' },
-                },
-              }}
-            />
-          </AuthProvider>
-        </I18nProvider>
+        <ThemeProvider>
+          <I18nProvider>
+            <AuthProvider>
+              {children}
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  style: {
+                    background: 'rgb(var(--luxury-surface))',
+                    color:      'rgb(var(--text-primary))',
+                    border:     '1px solid rgb(var(--luxury-border))',
+                    borderRadius:'12px',
+                  },
+                  success: {
+                    iconTheme: { primary: '#D4AF37', secondary: '#000' },
+                  },
+                  error: {
+                    iconTheme: { primary: '#ef4444', secondary: '#fff' },
+                  },
+                }}
+              />
+            </AuthProvider>
+          </I18nProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
