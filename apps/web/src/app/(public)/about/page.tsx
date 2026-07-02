@@ -3,89 +3,70 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
 import { Target, Eye, Heart, Award, Users, Star, MapPin, ArrowRight } from 'lucide-react'
-import type { Metadata } from 'next'
 import { useI18n } from '@/contexts/I18nContext'
 
 const TEAM = [
   {
-    name:  'Kofi Mensah',
-    role:  'Founder & CEO',
-    bio:   'Kofi founded Afroglow with a vision to create a premium salon coworking space that celebrates African beauty culture in the heart of Europe.',
-    image: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=400&h=400&fit=crop',
-  },
-  {
-    name:  'Adaeze Nwosu',
-    role:  'Head of Operations',
-    bio:   'With 10+ years in luxury hospitality, Adaeze ensures every client and barber has an exceptional experience at Afroglow.',
-    image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop',
-  },
-  {
-    name:  'Tomas Kavaliauskas',
-    role:  'Creative Director',
-    bio:   'Tomas brings the visual identity of Afroglow to life, blending luxury European aesthetics with vibrant African culture.',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop',
+    name: 'Nkonglac Desmond F.',
+    role: 'Founder & Owner',
+    bio:  'A Cameroonian entrepreneur who arrived in Vilnius in 2018 and built Afroglow around trust, precision, cultural pride, and professional service.',
   },
 ]
 
 const VALUES = [
-  { icon: Star,   title: 'Excellence',  desc: 'We set the highest standards for every service and experience.' },
-  { icon: Heart,  title: 'Community',   desc: 'Building a space where professionals and clients thrive together.' },
-  { icon: Award,  title: 'Authenticity',desc: 'Celebrating cultural beauty heritage with modern techniques.' },
-  { icon: Users,  title: 'Inclusion',   desc: 'A welcoming home for every professional and client.' },
+  { icon: Star,   title: 'Precision',       desc: 'Clean work, careful consultation, and attention to every detail.' },
+  { icon: Heart,  title: 'Respect',         desc: 'Every client and professional is welcomed with dignity and care.' },
+  { icon: Award,  title: 'Authenticity',    desc: 'African grooming heritage delivered with modern salon standards.' },
+  { icon: Users,  title: 'Opportunity',     desc: 'A platform where skilled professionals can grow their reputation.' },
 ]
 
 const MILESTONES = [
-  { year: '2019', event: 'Afroglow founded in Vilnius with 5 stations' },
-  { year: '2020', event: 'Expanded to 20 working spots; launched online booking' },
-  { year: '2021', event: 'Won "Best Afro Salon Lithuania 2021" award' },
-  { year: '2022', event: 'Launched the digital platform & chair-rental marketplace' },
-  { year: '2023', event: '50+ professionals onboarded; 10,000+ clients served' },
-  { year: '2024', event: 'Multi-branch expansion plans launched' },
+  { year: '2018', event: 'Nkonglac Desmond F. arrived in Vilnius from Cameroon and began learning the local beauty and grooming market.' },
+  { year: '2019', event: 'He started building relationships with clients, barbers, stylists, and communities that needed reliable textured-hair expertise.' },
+  { year: '2021', event: 'The idea for Afroglow became clearer: a professional space where African grooming culture and European service standards meet.' },
+  { year: '2024', event: 'Afroglow grew into a structured salon concept with services, professionals, booking workflows, and a strong visual identity.' },
+  { year: '2026', event: 'The platform now supports online booking, admin-managed services, professional profiles, gallery work, pricing, and working hours.' },
 ]
 
 const ABOUT_LT = {
   heroTitle: ['Mūsų', 'istorija'],
-  heroText: 'Afroglow gimė iš noro sukurti daugiau nei saloną: erdvę, kuri Vilniaus širdyje puoselėja Afrikos ir Karibų grožio kultūrą.',
-  storyTitle: 'Kur kultūra susitinka su meistryste',
+  heroText: 'Afroglow yra profesionali grožio ir kirpimo erdvė Vilniuje, sukurta Nkonglac Desmond F. - kamerūniečio verslininko, kuris į Vilnių atvyko 2018 metais.',
+  storyTitle: 'Nuo Kamerūno iki Vilniaus: profesionalumo istorija',
   story: [
-    '2019 metais Kofi Mensah atvyko į Vilnių su žirklėmis, svajone ir tvirtu įsitikinimu: pasaulinio lygio afrikietiškų plaukų priežiūra nusipelno pasaulinio lygio erdvės.',
-    'Apie saloną greitai pasklido žinia. Klientai atvykdavo iš visos Lietuvos ir už jos ribų, kad patirtų kartomis perduotas technikas modernioje, kokybiškoje aplinkoje.',
-    'Šiandien Afroglow yra daugiau nei salonas. Tai bendradarbystės bendruomenė, kur grožio profesionalai kuria karjerą, augina savo vardą ir aptarnauja lojalius klientus.',
+    'Nkonglac Desmond F. atvyko į Vilnių 2018 metais iš Kamerūno. Gyvendamas Lietuvoje jis pastebėjo aiškų poreikį patikimai, kultūriškai suprantančiai ir profesionaliai afro bei tekstūruotų plaukų priežiūros erdvei.',
+    'Afroglow buvo kuriamas kaip atsakas į šį poreikį: vieta, kur klientai gali gauti tvarkingą kirpimą, barzdos formavimą, pynimus, lokus, stilizavimą ir konsultaciją be kompromisų dėl kokybės.',
+    'Šiandien Afroglow siekia būti daugiau nei įprastas salonas. Tai auganti grožio platforma, jungianti klientus, specialistus, darbo vietų nuomą, galerijas ir aiškią administravimo sistemą vienoje profesionalioje patirtyje.',
   ],
   join: 'Prisijungti prie bendruomenės',
-  clients: 'Laimingų klientų per mėnesį',
+  clients: 'Vilniuje nuo 2018 m.',
   missionTitle: 'Mūsų misija',
-  mission: 'Sukurti kokybišką ir kultūriškai atvirą salono patirtį, kuri padeda grožio specialistams augti ir klientams gauti aukščiausio lygio paslaugas.',
+  mission: 'Sukurti patikimą, estetišką ir kultūriškai suprantančią grožio erdvę, kurioje klientai gauna kokybiškas paslaugas, o specialistai turi sąlygas augti profesionaliai.',
   visionTitle: 'Mūsų vizija',
-  vision: 'Tapti pirmaujančia Afrikos ir daugiakultūrio grožio bendradarbystės platforma Europoje, plečiantis į kitus miestus ir saugant grožio tradicijų įvairovę.',
+  vision: 'Tapti viena iš stipriausių afro, tekstūruotų plaukų ir daugiakultūrio grožio erdvių Baltijos šalyse - žinoma dėl kokybės, pagarbos, autentiškumo ir modernios klientų patirties.',
   valuesTitle: 'Mūsų vertybės',
   journeyTitle: 'Mūsų kelias',
-  teamTitle: 'Susipažinkite su komanda',
-  teamSubtitle: 'Žmonės, kuriantys Afroglow patirtį',
-  rentTitle: 'Kodėl verta nuomotis Afroglow?',
-  rentText: 'Prisijunkite prie augančios specialistų bendruomenės. Čia jūsų laukia kokybiška darbo vieta, rinkodaros palaikymas ir komanda, kuri padeda augti.',
+  teamTitle: 'Įkūrėjas',
+  teamSubtitle: 'Žmogus, kuriantis Afroglow kryptį ir standartą',
+  rentTitle: 'Profesionali erdvė klientams ir specialistams',
+  rentText: 'Afroglow sukurta klientams, kurie vertina tvarką, kokybę ir pagarbą, bei specialistams, kurie nori dirbti profesionalioje aplinkoje su aiškia sistema.',
   apply: 'Pateikti paraišką',
-  visit: 'Aplankyti mus',
+  visit: 'Rezervuoti vizitą',
   values: [
-    { title: 'Meistriškumas', desc: 'Kiekvienai paslaugai ir patirčiai keliame aukštus standartus.' },
-    { title: 'Bendruomenė', desc: 'Kuriame erdvę, kurioje kartu auga specialistai ir klientai.' },
+    { title: 'Tikslumas', desc: 'Švarus darbas, aiški konsultacija ir dėmesys kiekvienai detalei.' },
+    { title: 'Pagarba', desc: 'Kiekvienas klientas ir specialistas sutinkamas oriai ir rūpestingai.' },
     { title: 'Autentiškumas', desc: 'Puoselėjame kultūrinį grožio paveldą ir modernias technikas.' },
-    { title: 'Įtrauktis', desc: 'Visiems profesionalams ir klientams kuriame svetingą aplinką.' },
+    { title: 'Galimybės', desc: 'Platforma, kurioje geri specialistai gali auginti savo vardą.' },
   ],
   milestones: [
-    'Afroglow įkurtas Vilniuje su 5 darbo vietomis',
-    'Išsiplėtė iki 20 darbo vietų ir paleido internetinę rezervaciją',
-    'Pelnė „Geriausio afro salono Lietuvoje 2021“ įvertinimą',
-    'Paleista skaitmeninė platforma ir darbo vietų nuomos sistema',
-    'Prijungta 50+ specialistų ir aptarnauta 10 000+ klientų',
-    'Pradėti kelių filialų plėtros planai',
+    'Nkonglac Desmond F. atvyko į Vilnių iš Kamerūno ir pradėjo pažinti vietinę grožio bei kirpimo rinką.',
+    'Jis pradėjo kurti ryšius su klientais, kirpėjais, stilistais ir bendruomenėmis, kurioms reikėjo patikimos tekstūruotų plaukų priežiūros.',
+    'Afroglow idėja tapo aiškesnė: profesionali erdvė, kur Afrikos grožio kultūra susitinka su europietiška paslaugų kokybe.',
+    'Afroglow išaugo į struktūruotą salono koncepciją su paslaugomis, specialistais, rezervacijomis ir aiškiu prekės ženklu.',
+    'Platforma palaiko internetinę rezervaciją, administruojamas paslaugas, specialistų profilius, galerijas, kainas ir darbo valandas.',
   ],
   team: [
-    { role: 'Įkūrėjas ir vadovas', bio: 'Kofi įkūrė Afroglow siekdamas sukurti kokybišką salono bendradarbystės erdvę, kuri Europoje garsina Afrikos grožio kultūrą.' },
-    { role: 'Operacijų vadovė', bio: 'Turėdama daugiau nei 10 metų prabangios svetingumo srities patirtį, Adaeze rūpinasi išskirtine klientų ir specialistų patirtimi.' },
-    { role: 'Kūrybos vadovas', bio: 'Tomas padeda formuoti Afroglow vizualinį identitetą, jungdamas europietišką estetiką ir gyvą Afrikos kultūrą.' },
+    { role: 'Įkūrėjas ir savininkas', bio: 'Kamerūnietis verslininkas, kuris į Vilnių atvyko 2018 m. ir Afroglow kuria remdamasis pasitikėjimu, tikslumu, kultūriniu pasididžiavimu ir profesionalia paslauga.' },
   ],
 }
 
@@ -122,7 +103,7 @@ export default function AboutPage() {
               {c ? c.heroTitle[0] : 'Our'} <span className="gold-shimmer">{c ? c.heroTitle[1] : 'Story'}</span>
             </h1>
             <p className="text-xl text-gray-300 leading-relaxed">
-              {c ? c.heroText : 'Afroglow was born from a dream to create more than just a salon — a movement celebrating African & Caribbean beauty culture in the heart of Vilnius, Lithuania.'}
+              {c ? c.heroText : 'Afroglow is a professional beauty and grooming space in Vilnius founded by Nkonglac Desmond F., a Cameroonian entrepreneur who arrived in Lithuania in 2018.'}
             </p>
           </motion.div>
         </div>
@@ -134,13 +115,13 @@ export default function AboutPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-3xl font-serif font-bold text-white mb-6">
-                {c ? c.storyTitle : 'Where Culture Meets Craft'}
+                {c ? c.storyTitle : 'From Cameroon to Vilnius: A Professional Beauty Story'}
               </h2>
               <div className="space-y-4 text-gray-400 leading-relaxed">
                 {(c ? c.story : [
-                  'In 2019, Kofi Mensah arrived in Vilnius with scissors, a dream, and an unshakable belief: world-class African hair care deserved a world-class space. He opened the first Afroglow studio with just five chairs and a vision.',
-                  'Word spread quickly. Clients came from across Lithuania — and beyond — to experience techniques passed down through generations, now elevated in a truly luxury environment.',
-                  "Today, Afroglow is more than a salon. It's a coworking community where over 50 beauty professionals craft their careers, build their brands, and serve thousands of loyal clients.",
+                  'Nkonglac Desmond F. arrived in Vilnius from Cameroon in 2018. Living in Lithuania, he saw a clear need for a salon experience that understood textured hair, modern grooming, cultural identity, and professional client care.',
+                  'Afroglow was built as the answer to that need: a place where clients can book sharp cuts, beard grooming, braids, locs, styling, and consultation with confidence, clarity, and respect.',
+                  'Today, Afroglow is growing into more than a traditional salon. It is a beauty platform connecting clients, professionals, portfolio galleries, working spot rentals, pricing, schedules, and admin-managed service quality in one polished experience.',
                 ]).map(text => <p key={text}>{text}</p>)}
               </div>
               <Link href="/rent-a-spot" className="btn-gold mt-8">
@@ -150,15 +131,15 @@ export default function AboutPage() {
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden shadow-luxury h-96">
                 <Image
-                  src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=600&fit=crop"
-                  alt="Afroglow Salon Interior"
+                  src="/images/haircuts/black-hair-barber-1.jpg"
+                  alt="Afroglow barber service in Vilnius"
                   fill
                   className="object-cover"
                 />
               </div>
               <div className="absolute -bottom-6 -left-6 glass-gold rounded-2xl p-6 shadow-gold">
-                <p className="text-3xl font-bold text-gradient-gold">5,000+</p>
-                <p className="text-sm text-gray-300">{c ? c.clients : 'Happy Clients Monthly'}</p>
+                <p className="text-3xl font-bold text-gradient-gold">2018</p>
+                <p className="text-sm text-gray-300">{c ? c.clients : 'In Vilnius since'}</p>
               </div>
             </div>
           </div>
@@ -176,7 +157,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-2xl font-serif font-bold text-white mb-4">{c ? c.missionTitle : 'Our Mission'}</h3>
               <p className="text-gray-400 leading-relaxed">
-                {c ? c.mission : 'To provide a premium, culturally inclusive salon experience that empowers beauty professionals to build thriving careers while delivering world-class services to every client.'}
+                {c ? c.mission : 'To create a trusted, stylish, and culturally aware beauty space where clients receive high-quality service and professionals have the structure to grow their craft and reputation.'}
               </p>
             </div>
             <div className="card-luxury p-8">
@@ -186,7 +167,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-2xl font-serif font-bold text-white mb-4">{c ? c.visionTitle : 'Our Vision'}</h3>
               <p className="text-gray-400 leading-relaxed">
-                {c ? c.vision : "To become Europe's leading African & multicultural beauty coworking platform, expanding to multiple cities while celebrating diverse beauty traditions at the highest level."}
+                {c ? c.vision : 'To become one of the strongest Afro, textured-hair, and multicultural beauty destinations in the Baltics, known for quality, respect, authenticity, and a modern client experience.'}
               </p>
             </div>
           </div>
@@ -261,10 +242,10 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="flex justify-center mb-3"><div className="gold-line" /></div>
-            <h2 className="section-title">{c ? c.teamTitle : 'Meet the Team'}</h2>
-            <p className="section-subtitle mx-auto">{c ? c.teamSubtitle : 'The passionate people behind Afroglow'}</p>
+            <h2 className="section-title">{c ? c.teamTitle : 'Founder'}</h2>
+            <p className="section-subtitle mx-auto">{c ? c.teamSubtitle : 'The person shaping Afroglow’s direction and standard'}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 gap-8 max-w-xl mx-auto">
             {team.map((member, i) => (
               <motion.div
                 key={member.name}
@@ -274,13 +255,10 @@ export default function AboutPage() {
                 transition={{ delay: i * 0.1 }}
                 className="card-luxury overflow-hidden group text-center"
               >
-                <div className="relative h-56">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                <div className="h-56 bg-gradient-hero flex items-center justify-center">
+                  <div className="w-24 h-24 rounded-3xl bg-gradient-gold flex items-center justify-center shadow-gold">
+                    <span className="text-luxury-black font-serif text-4xl font-bold">D</span>
+                  </div>
                 </div>
                 <div className="p-6">
                   <h3 className="font-serif font-bold text-white text-lg">{member.name}</h3>
@@ -297,16 +275,16 @@ export default function AboutPage() {
       <section className="py-24 bg-luxury-charcoal/50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex justify-center mb-3"><div className="gold-line" /></div>
-          <h2 className="section-title mb-6">{c ? c.rentTitle : 'Why Rent at Afroglow?'}</h2>
+          <h2 className="section-title mb-6">{c ? c.rentTitle : 'A Professional Space for Clients and Specialists'}</h2>
           <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
-            {c ? c.rentText : 'Join a growing community of professionals who have found their home at Afroglow. Premium workspace, built-in marketing, and a supportive team behind you.'}
+            {c ? c.rentText : 'Afroglow is built for clients who value clean service, quality, and respect, and for specialists who want to work in a professional environment with a clear system.'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/rent-a-spot" className="btn-gold text-base px-8 py-4">
               {c ? c.apply : 'Apply to Rent'} <ArrowRight size={16} />
             </Link>
-            <Link href="/contact" className="btn-outline-gold text-base px-8 py-4">
-              <MapPin size={16} /> {c ? c.visit : 'Visit Us'}
+            <Link href="/book" className="btn-outline-gold text-base px-8 py-4">
+              <MapPin size={16} /> {c ? c.visit : 'Book a Visit'}
             </Link>
           </div>
         </div>
