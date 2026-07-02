@@ -307,7 +307,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-luxury-black overflow-x-hidden">
 
       {/* ══════════ HERO ══════════ */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      <section className="on-dark-media relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         {/* Background */}
         <Image
           src="/images/haircuts/black-hair-barber-1.jpg"
@@ -317,7 +317,7 @@ export default function HomePage() {
           className="object-cover object-center"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-luxury-black/70 via-luxury-black/60 to-luxury-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/85" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(10,10,10,0.62)_70%)]" />
         <div className="absolute inset-0 bg-noise opacity-30" />
 
@@ -457,7 +457,7 @@ export default function HomePage() {
               <FadeIn key={pro.name} delay={i * 0.1} direction="up">
                 <div className="card-luxury overflow-hidden group">
                   {/* Image */}
-                  <div className="relative h-56 overflow-hidden">
+                  <div className="on-dark-media relative h-56 overflow-hidden">
                     <Image
                       src={pro.image}
                       alt={pro.name}
@@ -601,7 +601,7 @@ export default function HomePage() {
                       i === 0 ? 'h-80' : 'h-64',
                     )}
                   />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent p-5">
+                  <div className="on-dark-media absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent p-5">
                     <h3 className="text-white font-semibold">{item.title}</h3>
                     <p className="text-xs text-gray-300 mt-1">{item.caption}</p>
                   </div>

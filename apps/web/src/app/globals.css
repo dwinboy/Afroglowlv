@@ -272,35 +272,41 @@ html.light .text-gray-400 { color: rgb(var(--text-muted)) !important; }
 html.light .text-gray-500 { color: rgb(var(--text-soft)) !important; }
 html.light .text-gray-600 { color: rgb(var(--text-soft) / 0.80) !important; }
 html.light .text-luxury-black { color: #0A0A0A !important; }
+html.light .text-gold-400,
+html.light .text-gold-500 {
+  color: #8A6500 !important;
+}
 
-html.light .bg-black\/40,
-html.light .bg-black\/50,
-html.light .bg-black\/60,
-html.light .bg-black\/70,
-html.light .bg-black\/75,
-html.light .bg-black\/80,
-html.light .bg-black\/90 {
-  background-color: rgba(255, 255, 255, 0.82) !important;
+html.light .badge-gold {
+  background-color: rgba(138, 101, 0, 0.12) !important;
+  border-color: rgba(138, 101, 0, 0.26) !important;
+  color: #7A5900 !important;
 }
 
 html.light .bg-white\/5 { background-color: rgba(93, 68, 20, 0.06) !important; }
 html.light .bg-white\/10 { background-color: rgba(93, 68, 20, 0.10) !important; }
 html.light .border-white\/5,
 html.light .border-white\/10 { border-color: rgba(93, 68, 20, 0.12) !important; }
-html.light .from-black\/60,
-html.light .from-black\/70,
-html.light .from-black\/75,
-html.light .from-black\/80,
-html.light .from-black\/90 {
-  --tw-gradient-from: rgba(250, 248, 242, 0.92) var(--tw-gradient-from-position) !important;
-  --tw-gradient-to: rgba(250, 248, 242, 0) var(--tw-gradient-to-position) !important;
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+
+html.light .on-dark-media,
+html.light .on-dark-media p,
+html.light .on-dark-media .text-white {
+  color: #fff !important;
 }
 
-html.light .via-black\/20,
-html.light .via-black\/45 {
-  --tw-gradient-to: rgba(250, 248, 242, 0) var(--tw-gradient-to-position) !important;
-  --tw-gradient-stops: var(--tw-gradient-from), rgba(250, 248, 242, 0.45) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+html.light .on-dark-media .text-gray-300 {
+  color: rgb(229 231 235) !important;
+}
+
+html.light .on-dark-media .text-gray-400,
+html.light .on-dark-media .text-gray-500 {
+  color: rgb(209 213 219) !important;
+}
+
+html.light .on-dark-media .text-gold-400,
+html.light .on-dark-media .text-gold-500,
+html.light .on-dark-media .badge-gold {
+  color: #F4CF53 !important;
 }
 
 /* ─── Utilities ─────────────────────────────────── */

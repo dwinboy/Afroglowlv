@@ -175,7 +175,7 @@ export default function ServicesPage() {
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
                     className="card-luxury overflow-hidden flex flex-col">
                     {visual ? (
-                      <div className="relative h-44 border-b border-luxury-border overflow-hidden">
+                      <div className="on-dark-media relative h-44 border-b border-luxury-border overflow-hidden">
                         <Image
                           src={visual.src}
                           alt={visual.alt}

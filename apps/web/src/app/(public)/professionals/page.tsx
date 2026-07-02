@@ -200,7 +200,7 @@ export default function ProfessionalsPage() {
                       transition={{ delay: i * 0.05 }}
                       className="card-luxury overflow-hidden group"
                     >
-                      <div className="relative h-64 bg-luxury-surface">
+                      <div className="on-dark-media relative h-64 bg-luxury-surface">
                         {heroImage ? (
                           <Image src={heroImage} alt={pro.user.fullName} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 33vw" />
                         ) : (

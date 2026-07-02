@@ -661,7 +661,7 @@ function ProfessionalProfileModal({
         className="bg-luxury-surface border border-luxury-border rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
-        <div className="relative h-48 bg-luxury-charcoal">
+        <div className="on-dark-media relative h-48 bg-luxury-charcoal">
           {heroImage ? (
             <Image
               src={heroImage}
@@ -737,7 +737,7 @@ function ProfessionalProfileModal({
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {gallery.map((item, index) => (
-                  <div key={`${item.imageUrl}-${index}`} className="relative aspect-square rounded-xl overflow-hidden bg-luxury-charcoal group">
+                  <div key={`${item.imageUrl}-${index}`} className="on-dark-media relative aspect-square rounded-xl overflow-hidden bg-luxury-charcoal group">
                     <Image src={item.imageUrl} alt={item.caption ?? (locale === 'lt' ? 'Specialisto darbas' : 'Professional work')} fill className="object-cover" />
                     {(item.caption || item.serviceType) && (
                       <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
