@@ -5,7 +5,7 @@
     "buildCommand": "npm install --include=dev && npm --workspace @afroglow/api run build"
   },
   "deploy": {
-    "startCommand": "npm --workspace @afroglow/api run start:prod",
+    "startCommand": "npm --workspace @afroglow/api run prisma:push && npm --workspace @afroglow/api run start:prod",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",

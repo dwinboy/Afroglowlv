@@ -84,6 +84,7 @@ export class AdminService {
           city:    'Vilnius',
           country: 'Lithuania',
           phone:   '+37069150485',
+          whatsappNumber: '+37069150485',
           email:   'afroglowstudiostudio@gmail.com',
           openingHours: {
             monday:    { open: '09:00', close: '21:00' },
@@ -107,6 +108,7 @@ export class AdminService {
     city?: string
     country?: string
     phone?: string
+    whatsappNumber?: string
     email?: string
     openingHours?: any
   }) {
@@ -120,6 +122,7 @@ export class AdminService {
         city:         dto.city,
         country:      dto.country,
         phone:        dto.phone,
+        whatsappNumber: dto.whatsappNumber,
         email:        dto.email,
         openingHours: dto.openingHours,
       },

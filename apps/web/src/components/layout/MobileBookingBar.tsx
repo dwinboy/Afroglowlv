@@ -2,17 +2,16 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { CalendarDays, Phone } from 'lucide-react'
+import { CalendarDays } from 'lucide-react'
 import { useI18n } from '@/contexts/I18nContext'
+import WhatsAppBookingButton from '@/components/booking/WhatsAppBookingButton'
 
 const COPY = {
   en: {
     book: 'Book now',
-    call: 'Call',
   },
   lt: {
     book: 'Rezervuoti',
-    call: 'Skambinti',
   },
 } as const
 
@@ -30,13 +29,7 @@ export default function MobileBookingBar() {
           <CalendarDays size={16} />
           {copy.book}
         </Link>
-        <a
-          href="tel:+37069150485"
-          className="flex h-12 w-12 items-center justify-center rounded-xl border border-luxury-border text-gold-400 transition-colors hover:border-gold-500/40 hover:bg-gold-500/10"
-          aria-label={copy.call}
-        >
-          <Phone size={17} />
-        </a>
+        <WhatsAppBookingButton iconOnly />
       </div>
     </div>
   )

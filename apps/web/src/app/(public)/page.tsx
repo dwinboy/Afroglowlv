@@ -12,6 +12,7 @@ import {
 import { useI18n } from '@/contexts/I18nContext'
 import { api } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
+import WhatsAppBookingButton from '@/components/booking/WhatsAppBookingButton'
 
 /* ── helpers ──────────────────────────────────── */
 const FadeIn = ({
@@ -377,6 +378,7 @@ export default function HomePage() {
                 <Scissors size={18} />
                 {t.hero.rentSpot}
               </Link>
+              <WhatsAppBookingButton className="text-base px-8 py-4" />
             </motion.div>
 
             {/* Stats */}

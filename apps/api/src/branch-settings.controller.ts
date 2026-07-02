@@ -30,6 +30,7 @@ export class BranchSettingsController {
         city: true,
         country: true,
         phone: true,
+        whatsappNumber: true,
         email: true,
         openingHours: true,
       },
@@ -42,6 +43,7 @@ export class BranchSettingsController {
       city: 'Vilnius',
       country: 'Lithuania',
       phone: '+37069150485',
+      whatsappNumber: '+37069150485',
       email: 'afroglowstudiostudio@gmail.com',
       openingHours: DEFAULT_OPENING_HOURS,
     }

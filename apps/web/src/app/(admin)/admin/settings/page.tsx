@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Settings, MapPin, Phone, Mail, Clock, Save } from 'lucide-react'
+import { Settings, MapPin, Phone, Mail, Clock, Save, MessageCircle } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { api } from '@/contexts/AuthContext'
 
@@ -12,6 +12,7 @@ interface BranchSettings {
   city:    string
   country: string
   phone:   string
+  whatsappNumber: string
   email:   string
   openingHours: {
     monday:    { open: string; close: string; closed?: boolean }
@@ -32,6 +33,7 @@ const DEFAULT: BranchSettings = {
   city: 'Vilnius',
   country: 'Lithuania',
   phone: '+37069150485',
+  whatsappNumber: '+37069150485',
   email: 'afroglowstudiostudio@gmail.com',
   openingHours: {
     monday:    { open: '09:00', close: '21:00' },
@@ -60,6 +62,7 @@ export default function AdminSettingsPage() {
           city: data.city ?? DEFAULT.city,
           country: data.country ?? DEFAULT.country,
           phone: data.phone ?? DEFAULT.phone,
+          whatsappNumber: data.whatsappNumber ?? data.phone ?? DEFAULT.whatsappNumber,
           email: data.email ?? DEFAULT.email,
           openingHours: data.openingHours ?? DEFAULT.openingHours,
         })
@@ -98,6 +101,7 @@ export default function AdminSettingsPage() {
         city: data.city,
         country: data.country,
         phone: data.phone ?? '',
+        whatsappNumber: data.whatsappNumber ?? '',
         email: data.email ?? '',
         openingHours: data.openingHours ?? settings.openingHours,
       })
@@ -143,6 +147,13 @@ export default function AdminSettingsPage() {
             <input value={settings.phone}
               onChange={e => setSettings(s => ({ ...s, phone: e.target.value }))}
               className="input-luxury w-full" />
+          </div>
+          <div>
+            <label className="label-luxury flex items-center gap-1.5"><MessageCircle size={12} /> WhatsApp Booking Number</label>
+            <input value={settings.whatsappNumber}
+              onChange={e => setSettings(s => ({ ...s, whatsappNumber: e.target.value }))}
+              className="input-luxury w-full"
+              placeholder="+37069150485" />
           </div>
           <div>
             <label className="label-luxury flex items-center gap-1.5"><Mail size={12} /> Email</label>

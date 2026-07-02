@@ -14,6 +14,7 @@ import {
 import { cn, formatPrice } from '@/lib/utils'
 import { api } from '@/contexts/AuthContext'
 import { useI18n } from '@/contexts/I18nContext'
+import WhatsAppBookingButton from '@/components/booking/WhatsAppBookingButton'
 
 const STEPS = ['Service', 'Professional', 'Date & Time', 'Details', 'Confirm']
 const LT_STEPS = ['Paslauga', 'Specialistas', 'Data ir laikas', 'Duomenys', 'Patvirtinimas']
@@ -557,6 +558,9 @@ export default function BookingPage() {
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="gold-line mx-auto mb-4" />
           <h1 className="section-title">{copy.title[0]} <span className="gold-shimmer">{copy.title[1]}</span></h1>
+          <div className="mt-6 flex justify-center">
+            <WhatsAppBookingButton />
+          </div>
         </div>
       </section>
 

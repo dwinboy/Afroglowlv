@@ -108,6 +108,7 @@ model Branch {
   city        String
   country     String   @default("Lithuania")
   phone       String?
+  whatsappNumber String? @map("whatsapp_number")
   email       String?
   imageUrl    String?
   isActive    Boolean  @default(true)
