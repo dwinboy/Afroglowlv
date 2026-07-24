@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ChevronDown, Globe, User, LogOut, LayoutDashboard, Shield, Moon, Sun } from 'lucide-react'
@@ -53,10 +54,16 @@ export default function Navbar() {
 
           {/* Brand */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 bg-gradient-gold rounded-lg flex items-center justify-center">
-              <span className="text-luxury-black font-serif font-bold text-lg">A</span>
-            </div>
-            <span className="font-serif font-bold text-xl text-white opacity-90 group-hover:opacity-100 transition-opacity">
+            <Image
+              src="/images/afroglow-logo.png"
+              alt="Afroglow Studio"
+              width={160}
+              height={160}
+              priority
+              className="h-14 w-14 md:h-16 md:w-16 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]
+                         transition-transform duration-300 group-hover:scale-105"
+            />
+            <span className="font-serif font-bold text-xl md:text-2xl text-white opacity-90 group-hover:opacity-100 transition-opacity">
               Afroglow
             </span>
           </Link>

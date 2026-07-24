@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Instagram, Facebook, Youtube, MapPin, Phone, Mail, ArrowRight } from 'lucide-react'
 import { useI18n } from '@/contexts/I18nContext'
 
@@ -93,10 +94,14 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="inline-flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 bg-gradient-gold rounded-lg flex items-center justify-center">
-                <span className="text-luxury-black font-serif font-bold text-lg">A</span>
-              </div>
-              <span className="font-serif font-bold text-xl text-white">Afroglow</span>
+              <Image
+                src="/images/afroglow-logo.png"
+                alt="Afroglow Studio"
+                width={160}
+                height={160}
+                className="h-16 w-16 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
+              />
+              <span className="font-serif font-bold text-2xl text-white">Afroglow</span>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               {t.footer.tagline}
