@@ -8,6 +8,7 @@ import { Clock, ChevronLeft, CalendarDays, ArrowRight, Scissors, Tag } from 'luc
 import { ServiceGlyph } from '@/components/icons/ServiceIcons'
 import { api } from '@/contexts/AuthContext'
 import { useI18n } from '@/contexts/I18nContext'
+import { serviceImage } from '@/lib/serviceImage'
 
 interface Service {
   id: string
@@ -19,19 +20,6 @@ interface Service {
   imageUrl: string | null
   description: string | null
   isPopular: boolean
-}
-
-/* Keyword → stock image fallback, used only when a service has no imageUrl set. */
-const SERVICE_VISUALS = [
-  { keywords: ['beard', 'trim', 'shave', 'barzd'], src: '/images/haircuts/beard-fade.jpg' },
-  { keywords: ['design', 'line', 'fade', 'kontūr'], src: '/images/haircuts/design-beard.jpg' },
-  { keywords: ['haircut', 'kids', 'cut', 'kirp'], src: '/images/haircuts/crisp-lineup.jpeg' },
-  { keywords: ['braid', 'loc', 'dread', 'pyn', 'twist'], src: '/images/haircuts/high-top-fade-chair.avif' },
-]
-
-function fallbackVisual(s: Service) {
-  const hay = `${s.name} ${s.category} ${s.description ?? ''}`.toLowerCase()
-  return SERVICE_VISUALS.find(v => v.keywords.some(k => hay.includes(k)))?.src ?? '/images/haircuts/black-hair-barber-1.jpg'
 }
 
 const COPY = {
@@ -129,7 +117,7 @@ export default function ServiceDetailPage() {
                 <div className="relative rounded-2xl overflow-hidden border border-luxury-border shadow-luxury aspect-[4/3] bg-luxury-charcoal">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={service.imageUrl || fallbackVisual(service)}
+                    src={serviceImage(service)}
                     alt={service.name}
                     className="w-full h-full object-cover grade-warm"
                   />

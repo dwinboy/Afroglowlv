@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { Clock, ChevronRight, Scissors } from 'lucide-react'
 import { ServiceGlyph } from '@/components/icons/ServiceIcons'
 import { cn } from '@/lib/utils'
+import { serviceImage } from '@/lib/serviceImage'
 import { api } from '@/contexts/AuthContext'
 import { useI18n } from '@/contexts/I18nContext'
 
@@ -13,24 +14,6 @@ interface Service {
   id: string; name: string; category: string; price: number
   duration: number; icon: string | null; description: string | null; imageUrl: string | null; isPopular: boolean
 }
-
-const SERVICE_VISUALS = [
-  {
-    keywords: ['beard', 'trim', 'shave'],
-    src: '/images/haircuts/beard-fade.jpg',
-    alt: 'Fresh beard shape and skin fade',
-  },
-  {
-    keywords: ['design', 'line', 'fade'],
-    src: '/images/haircuts/design-beard.jpg',
-    alt: 'Haircut with detailed line design',
-  },
-  {
-    keywords: ['haircut', 'kids', 'cut'],
-    src: '/images/haircuts/crisp-lineup.jpeg',
-    alt: 'Crisp haircut line up',
-  },
-]
 
 const COPY = {
   en: {
@@ -64,11 +47,6 @@ const COPY = {
     emptyCta: 'Peržiūrėti specialistus',
   },
 } as const
-
-function getServiceVisual(service: Service) {
-  const haystack = `${service.name} ${service.category} ${service.description ?? ''}`.toLowerCase()
-  return SERVICE_VISUALS.find(visual => visual.keywords.some(keyword => haystack.includes(keyword)))
-}
 
 function ServiceCardSkeleton() {
   return (
@@ -168,7 +146,7 @@ export default function ServicesPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filtered.map((service, i) => {
-                const imgSrc = service.imageUrl || getServiceVisual(service)?.src
+                const imgSrc = serviceImage(service)
 
                 return (
                   <motion.div key={service.id}

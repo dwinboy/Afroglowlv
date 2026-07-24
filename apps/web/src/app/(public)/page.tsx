@@ -14,6 +14,7 @@ import { api } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
 import WhatsAppBookingButton from '@/components/booking/WhatsAppBookingButton'
 import { ServiceIcon, ServiceGlyph } from '@/components/icons/ServiceIcons'
+import { serviceImage } from '@/lib/serviceImage'
 
 /* ── helpers ──────────────────────────────────── */
 const FadeIn = ({
@@ -227,7 +228,8 @@ export default function HomePage() {
         .slice(0, 8)
         .map(s => ({
           id:    s.id,
-          glyph: <ServiceGlyph icon={s.icon} size={26} />,
+          glyph: <ServiceGlyph icon={s.icon} size={22} />,
+          img:   serviceImage(s),
           name:  s.name,
           desc:  s.description?.trim() || (locale === 'lt'
             ? 'Rezervuokite pas patikrintą Afroglow specialistą.'
@@ -249,7 +251,8 @@ export default function HomePage() {
       { icon: 'smile',    name: t.services.kidsHaircut.name,      desc: t.services.kidsHaircut.desc,      price: priceLabel(12) },
     ].map(s => ({
       id:    s.icon,
-      glyph: <ServiceIcon name={s.icon} size={26} />,
+      glyph: <ServiceIcon name={s.icon} size={22} />,
+      img:   serviceImage({ name: s.name }, s.icon),
       name:  s.name,
       desc:  s.desc,
       price: s.price,
@@ -370,9 +373,12 @@ export default function HomePage() {
           className="object-cover object-center grade-warm"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/85" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(10,10,10,0.62)_70%)]" />
-        <div className="absolute inset-0 bg-noise opacity-30" />
+        {/* Legibility scrim — anchored darkest at the base so the stats row stays readable */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/72 via-black/52 to-black/90" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(10,10,10,0.55)_75%)]" />
+        {/* Warm bloom over the scrim so the studio's illuminated sign glows through */}
+        <div className="absolute inset-0 mix-blend-screen bg-[radial-gradient(ellipse_50%_38%_at_44%_31%,rgba(244,207,83,0.26),transparent_72%)]" />
+        <div className="absolute inset-0 bg-noise opacity-25" />
 
         {/* Grid lines */}
         <div className="absolute inset-0 opacity-5"
@@ -475,15 +481,27 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, i) => (
               <FadeIn key={service.id} delay={i * 0.07} direction="up">
-                <Link href={service.href} className="card-luxury card-lift p-6 block group cursor-pointer">
-                  <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-gold-500/20 bg-gold-500/10 text-gold-400 transition-all duration-300 group-hover:scale-105 group-hover:border-gold-500/40 group-hover:bg-gold-500/20">
-                    {service.glyph}
+                <Link href={service.href} className="card-luxury card-lift block group cursor-pointer overflow-hidden">
+                  {/* Photo — admin-managed per service, with a curated fallback */}
+                  <div className="on-dark-media relative h-36 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={service.img}
+                      alt={service.name}
+                      className="w-full h-full object-cover grade-warm transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-luxury-surface via-black/35 to-transparent" />
+                    <span className="absolute bottom-3 left-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold-500/30 bg-black/55 backdrop-blur-md text-gold-400 transition-all duration-300 group-hover:border-gold-500/60 group-hover:text-gold-300">
+                      {service.glyph}
+                    </span>
                   </div>
-                  <h3 className="font-semibold text-white group-hover:text-gold-400 transition-colors mb-2">
-                    {service.name}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">{service.desc}</p>
-                  <span className="text-xs font-semibold text-gold-400">{service.price}</span>
+                  <div className="p-5">
+                    <h3 className="font-semibold text-white group-hover:text-gold-400 transition-colors mb-2">
+                      {service.name}
+                    </h3>
+                    <p className="text-sm text-gray-400 mb-4 line-clamp-2">{service.desc}</p>
+                    <span className="text-xs font-semibold text-gold-400">{service.price}</span>
+                  </div>
                 </Link>
               </FadeIn>
             ))}
