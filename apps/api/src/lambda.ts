@@ -21,7 +21,15 @@ async function bootstrap() {
   const frontendUrl = config.get<string>('FRONTEND_URL', 'http://localhost:3000')
   const extraUrls = (config.get<string>('FRONTEND_URLS', '') || '')
     .split(',').map((v: string) => v.trim()).filter(Boolean)
-  const allowedOrigins = Array.from(new Set([frontendUrl, ...extraUrls, 'https://afroglow.lt']))
+  const allowedOrigins = Array.from(new Set([
+    frontendUrl,
+    ...extraUrls,
+    // Keep in sync with main.ts — production domains always allowed.
+    'https://afroglowstudio.com',
+    'https://www.afroglowstudio.com',
+    'https://afroglow.lt',
+    'https://www.afroglow.lt',
+  ]))
 
   app.use(helmet({
     crossOriginEmbedderPolicy: false,

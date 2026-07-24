@@ -19,7 +19,12 @@ async function bootstrap() {
   const allowedOrigins = Array.from(new Set([
     primaryFrontendUrl,
     ...extraFrontendUrls,
+    // Production domains, allowed by default so a missing/incorrect
+    // FRONTEND_URL can never take the live site's API calls down.
+    'https://afroglowstudio.com',
+    'https://www.afroglowstudio.com',
     'https://afroglow.lt',
+    'https://www.afroglow.lt',
   ]))
 
   /* ── Security ──────────────────────── */
