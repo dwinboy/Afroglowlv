@@ -363,8 +363,8 @@ export default function HomePage() {
       <section className="on-dark-media relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         {/* Background */}
         <Image
-          src="/images/haircuts/black-hair-barber-1.jpg"
-          alt="Afroglow barber preparing a client in the chair"
+          src="/images/studio/hero.jpg"
+          alt="Afroglow Studio in Vilnius — illuminated AfroGlow Studio sign above the styling chair and makeup station"
           fill
           priority
           className="object-cover object-center grade-warm"
