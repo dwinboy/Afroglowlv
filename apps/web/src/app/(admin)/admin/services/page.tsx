@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Pencil, Trash2, X, Save, Eye, EyeOff, Star } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Save, Eye, EyeOff, Star, Upload, Image as ImageIcon } from 'lucide-react'
 import { api } from '@/contexts/AuthContext'
 import { toast } from 'react-hot-toast'
 import { formatPrice, cn } from '@/lib/utils'
@@ -16,6 +16,7 @@ interface Service {
   price:       number
   duration:    number
   icon:        string
+  imageUrl:    string
   isActive:    boolean
   isPopular:   boolean
 }
@@ -29,7 +30,7 @@ const ICONS = ['✂️','💈','🪒','👑','🧵','🔒','🎨','👸','💆',
 
 const EMPTY: Omit<Service, 'id'> = {
   name: '', category: 'Hair', description: '', price: 0,
-  duration: 30, icon: '✂️', isActive: true, isPopular: false,
+  duration: 30, icon: '✂️', imageUrl: '', isActive: true, isPopular: false,
 }
 
 export default function AdminServicesPage() {
@@ -39,6 +40,7 @@ export default function AdminServicesPage() {
   const [editing, setEditing]     = useState<Service | null>(null)
   const [form, setForm]           = useState<Omit<Service, 'id'>>(EMPTY)
   const [saving, setSaving]       = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => { fetchServices() }, [])
 
@@ -64,7 +66,7 @@ export default function AdminServicesPage() {
   function openEdit(s: Service) {
     setEditing(s)
     setForm({ name: s.name, category: s.category, description: s.description ?? '', price: s.price,
-      duration: s.duration, icon: s.icon ?? '✂️', isActive: s.isActive, isPopular: s.isPopular })
+      duration: s.duration, icon: s.icon ?? '✂️', imageUrl: s.imageUrl ?? '', isActive: s.isActive, isPopular: s.isPopular })
     setModal('edit')
   }
 
@@ -107,6 +109,23 @@ export default function AdminServicesPage() {
       setServices(prev => prev.filter(s => s.id !== id))
     } catch {
       toast.error('Cannot delete — service may have bookings')
+    }
+  }
+
+  async function uploadImage(file: File) {
+    const fd = new FormData()
+    fd.append('files', file)
+    setUploading(true)
+    try {
+      const { data } = await api.post<{ url: string }[]>('/upload/portfolio', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      if (data[0]?.url) setForm(p => ({ ...p, imageUrl: data[0].url }))
+      toast.success('Image uploaded')
+    } catch {
+      toast.error('Upload failed')
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -279,6 +298,23 @@ export default function AdminServicesPage() {
                   <textarea value={form.description} onChange={e => f('description', e.target.value)}
                     rows={2} maxLength={300} placeholder="Brief description for clients…"
                     className="input-luxury w-full resize-none" />
+                </div>
+
+                {/* Image — shown on the service's own page */}
+                <div>
+                  <label className="label-luxury">Photo <span className="text-gray-600 font-normal">(shown on the service page)</span></label>
+                  <div className="aspect-video rounded-lg border border-luxury-border bg-luxury-surface overflow-hidden flex items-center justify-center mb-2">
+                    {form.imageUrl
+                      ? <img src={form.imageUrl} alt="" className="w-full h-full object-cover" />
+                      : <ImageIcon className="text-gray-600" size={34} />}
+                  </div>
+                  <label className="btn-outline-gold w-full justify-center cursor-pointer text-sm">
+                    <Upload size={14} /> {uploading ? 'Uploading…' : 'Upload photo'}
+                    <input type="file" accept="image/*" className="hidden" disabled={uploading}
+                      onChange={e => { const file = e.target.files?.[0]; if (file) uploadImage(file); e.currentTarget.value = '' }} />
+                  </label>
+                  <input value={form.imageUrl} onChange={e => f('imageUrl', e.target.value)}
+                    className="input-luxury w-full mt-2" placeholder="or paste an image URL https://…" />
                 </div>
 
                 {/* Toggles */}

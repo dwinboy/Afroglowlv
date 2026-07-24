@@ -13,7 +13,7 @@ import { useI18n } from '@/contexts/I18nContext'
 import { api } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
 import WhatsAppBookingButton from '@/components/booking/WhatsAppBookingButton'
-import { ServiceIcon } from '@/components/icons/ServiceIcons'
+import { ServiceIcon, ServiceGlyph } from '@/components/icons/ServiceIcons'
 
 /* ── helpers ──────────────────────────────────── */
 const FadeIn = ({
@@ -62,6 +62,18 @@ const DEFAULT_PUBLIC_STATS: PublicStats = {
   professionals: 0,
   bookings: 0,
   satisfaction: 0,
+}
+
+/* Services shown on the homepage come from the admin-managed list so each card
+   can link to its own service page. The curated list below is only a fallback
+   for when the API is unreachable or no services exist yet. */
+type DbService = {
+  id: string
+  name: string
+  description: string | null
+  price: number
+  icon: string | null
+  isPopular: boolean
 }
 
 const SERVICES = [
@@ -203,16 +215,47 @@ const RENTAL_BENEFITS = [
 export default function HomePage() {
   const { t, locale } = useI18n()
   const [publicStats, setPublicStats] = useState<PublicStats>(DEFAULT_PUBLIC_STATS)
-  const services = useMemo(() => [
-    { icon: 'scissors', name: t.services.haircut.name,          desc: t.services.haircut.desc,          price: locale === 'lt' ? 'nuo €15' : 'from €15' },
-    { icon: 'razor',    name: t.services.beardTrim.name,        desc: t.services.beardTrim.desc,        price: locale === 'lt' ? 'nuo €10' : 'from €10' },
-    { icon: 'braid',    name: t.services.braiding.name,         desc: t.services.braiding.desc,         price: locale === 'lt' ? 'nuo €40' : 'from €40' },
-    { icon: 'dread',    name: t.services.dreadlocks.name,       desc: t.services.dreadlocks.desc,       price: locale === 'lt' ? 'nuo €60' : 'from €60' },
-    { icon: 'crown',    name: t.services.wigInstallation.name,  desc: t.services.wigInstallation.desc,  price: locale === 'lt' ? 'nuo €50' : 'from €50' },
-    { icon: 'droplet',  name: t.services.hairColoring.name,     desc: t.services.hairColoring.desc,     price: locale === 'lt' ? 'nuo €45' : 'from €45' },
-    { icon: 'sparkle',  name: t.services.womenStyling.name,     desc: t.services.womenStyling.desc,     price: locale === 'lt' ? 'nuo €30' : 'from €30' },
-    { icon: 'smile',    name: t.services.kidsHaircut.name,      desc: t.services.kidsHaircut.desc,      price: locale === 'lt' ? 'nuo €12' : 'from €12' },
-  ], [locale, t])
+  const [dbServices,  setDbServices]  = useState<DbService[]>([])
+
+  const services = useMemo(() => {
+    const priceLabel = (p: number) => `${locale === 'lt' ? 'nuo' : 'from'} €${p}`
+
+    // Live, admin-managed services — each links to its own page.
+    if (dbServices.length > 0) {
+      return [...dbServices]
+        .sort((a, b) => Number(b.isPopular) - Number(a.isPopular))
+        .slice(0, 8)
+        .map(s => ({
+          id:    s.id,
+          glyph: <ServiceGlyph icon={s.icon} size={26} />,
+          name:  s.name,
+          desc:  s.description?.trim() || (locale === 'lt'
+            ? 'Rezervuokite pas patikrintą Afroglow specialistą.'
+            : 'Book with a verified Afroglow professional.'),
+          price: priceLabel(s.price),
+          href:  `/services/${s.id}`,
+        }))
+    }
+
+    // Fallback only — no live services available.
+    return [
+      { icon: 'scissors', name: t.services.haircut.name,          desc: t.services.haircut.desc,          price: priceLabel(15) },
+      { icon: 'razor',    name: t.services.beardTrim.name,        desc: t.services.beardTrim.desc,        price: priceLabel(10) },
+      { icon: 'braid',    name: t.services.braiding.name,         desc: t.services.braiding.desc,         price: priceLabel(40) },
+      { icon: 'dread',    name: t.services.dreadlocks.name,       desc: t.services.dreadlocks.desc,       price: priceLabel(60) },
+      { icon: 'crown',    name: t.services.wigInstallation.name,  desc: t.services.wigInstallation.desc,  price: priceLabel(50) },
+      { icon: 'droplet',  name: t.services.hairColoring.name,     desc: t.services.hairColoring.desc,     price: priceLabel(45) },
+      { icon: 'sparkle',  name: t.services.womenStyling.name,     desc: t.services.womenStyling.desc,     price: priceLabel(30) },
+      { icon: 'smile',    name: t.services.kidsHaircut.name,      desc: t.services.kidsHaircut.desc,      price: priceLabel(12) },
+    ].map(s => ({
+      id:    s.icon,
+      glyph: <ServiceIcon name={s.icon} size={26} />,
+      name:  s.name,
+      desc:  s.desc,
+      price: s.price,
+      href:  '/services',
+    }))
+  }, [dbServices, locale, t])
 
   const gallery = useMemo(() => locale === 'lt' ? [
     { src: '/images/haircuts/black-hair-barber-1.jpg', title: 'Darbas kėdėje', caption: 'Profesionali priežiūra švarioje salono aplinkoje' },
@@ -291,6 +334,14 @@ export default function HomePage() {
       })
       .catch(() => {
         if (mounted) setPublicStats(DEFAULT_PUBLIC_STATS)
+      })
+
+    api.get<DbService[]>('/services')
+      .then(({ data }) => {
+        if (mounted) setDbServices(Array.isArray(data) ? data : [])
+      })
+      .catch(() => {
+        if (mounted) setDbServices([])
       })
 
     return () => {
@@ -423,10 +474,10 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, i) => (
-              <FadeIn key={service.name} delay={i * 0.07} direction="up">
-                <Link href="/services" className="card-luxury card-lift p-6 block group cursor-pointer">
+              <FadeIn key={service.id} delay={i * 0.07} direction="up">
+                <Link href={service.href} className="card-luxury card-lift p-6 block group cursor-pointer">
                   <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-gold-500/20 bg-gold-500/10 text-gold-400 transition-all duration-300 group-hover:scale-105 group-hover:border-gold-500/40 group-hover:bg-gold-500/20">
-                    <ServiceIcon name={service.icon} size={26} />
+                    {service.glyph}
                   </div>
                   <h3 className="font-semibold text-white group-hover:text-gold-400 transition-colors mb-2">
                     {service.name}

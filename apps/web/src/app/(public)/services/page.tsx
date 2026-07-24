@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Clock, ChevronRight, Scissors } from 'lucide-react'
 import { ServiceGlyph } from '@/components/icons/ServiceIcons'
@@ -12,7 +11,7 @@ import { useI18n } from '@/contexts/I18nContext'
 
 interface Service {
   id: string; name: string; category: string; price: number
-  duration: number; icon: string | null; description: string | null; isPopular: boolean
+  duration: number; icon: string | null; description: string | null; imageUrl: string | null; isPopular: boolean
 }
 
 const SERVICE_VISUALS = [
@@ -169,48 +168,49 @@ export default function ServicesPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filtered.map((service, i) => {
-                const visual = getServiceVisual(service)
+                const imgSrc = service.imageUrl || getServiceVisual(service)?.src
 
                 return (
                   <motion.div key={service.id}
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                    className="card-luxury overflow-hidden flex flex-col">
-                    {visual ? (
-                      <div className="on-dark-media relative h-44 border-b border-luxury-border overflow-hidden">
-                        <Image
-                          src={visual.src}
-                          alt={visual.alt}
-                          fill
-                          className="object-cover transition-transform duration-500 hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                      </div>
-                    ) : null}
-                    <div className="p-6 flex flex-1 flex-col">
-                      <div className="flex items-start justify-between mb-4">
-                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-gold-500/20 bg-gold-500/10 text-gold-400">
-                          <ServiceGlyph icon={service.icon} size={24} />
-                        </span>
-                        <div className="flex flex-col items-end gap-1">
-                          {service.isPopular && <span className="badge-gold text-xs">{copy.popular}</span>}
-                          <span className="text-lg font-bold text-gradient-gold">€{service.price}</span>
+                    className="card-luxury card-lift overflow-hidden flex flex-col">
+                    <Link href={`/services/${service.id}`} className="group flex flex-1 flex-col">
+                      {imgSrc ? (
+                        <div className="on-dark-media relative h-44 border-b border-luxury-border overflow-hidden">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={imgSrc}
+                            alt={service.name}
+                            className="w-full h-full object-cover grade-warm transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                         </div>
-                      </div>
-                      <h3 className="font-semibold text-white mb-2">{service.name}</h3>
-                      <p className="text-sm text-gray-400 leading-relaxed flex-1 mb-4">
-                        {service.description ?? copy.fallback(service.name)}
-                      </p>
-                      <div className="flex items-center gap-4 pt-4 border-t border-luxury-border">
-                        <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                          <Clock size={13} className="text-gold-400" />
-                          {service.duration} {copy.min}
+                      ) : null}
+                      <div className="p-6 flex flex-1 flex-col">
+                        <div className="flex items-start justify-between mb-4">
+                          <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-gold-500/20 bg-gold-500/10 text-gold-400">
+                            <ServiceGlyph icon={service.icon} size={24} />
+                          </span>
+                          <div className="flex flex-col items-end gap-1">
+                            {service.isPopular && <span className="badge-gold text-xs">{copy.popular}</span>}
+                            <span className="text-lg font-bold text-gradient-gold">€{service.price}</span>
+                          </div>
                         </div>
-                        <Link href={`/book?service=${service.id}`}
-                          className="ml-auto btn-gold text-xs py-1.5 px-4">
-                          {copy.book} <ChevronRight size={12} />
-                        </Link>
+                        <h3 className="font-semibold text-white mb-2 group-hover:text-gold-400 transition-colors">{service.name}</h3>
+                        <p className="text-sm text-gray-400 leading-relaxed flex-1">
+                          {service.description ?? copy.fallback(service.name)}
+                        </p>
                       </div>
+                    </Link>
+                    <div className="flex items-center gap-4 px-6 py-4 border-t border-luxury-border">
+                      <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                        <Clock size={13} className="text-gold-400" />
+                        {service.duration} {copy.min}
+                      </div>
+                      <Link href={`/book?service=${service.id}`}
+                        className="ml-auto btn-gold text-xs py-1.5 px-4">
+                        {copy.book} <ChevronRight size={12} />
+                      </Link>
                     </div>
                   </motion.div>
                 )
