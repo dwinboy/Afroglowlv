@@ -23,10 +23,10 @@ interface Service {
 
 const CATEGORIES = ['Hair', 'Beard', 'Braids & Locs', 'Color', 'Treatments', 'Special']
 
-// Each emoji maps to a distinct gold line-icon (see ServiceGlyph). '✨' is
-// dropped from the palette as it duplicates '👸' (sparkle) but stays mapped
-// for any service that already stored it.
-const ICONS = ['✂️','💈','🪒','👑','🧵','🔒','🎨','👸','💆','🌟','💅']
+// Each emoji maps to a distinct gold line-icon (see ServiceGlyph). Emoji that
+// duplicate another's icon ('✨','💆','🌟','🔧','💁') are kept out of the picker
+// but stay mapped, so services that already store them still render properly.
+const ICONS = ['✂️','💈','🪒','👑','🧵','💫','🌀','🔒','🎨','💧','🌿','👸','👶','💅']
 
 const EMPTY: Omit<Service, 'id'> = {
   name: '', category: 'Hair', description: '', price: 0,

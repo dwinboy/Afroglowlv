@@ -244,7 +244,7 @@ export default function HomePage() {
       { icon: 'braid',    name: t.services.braiding.name,         desc: t.services.braiding.desc,         price: priceLabel(40) },
       { icon: 'dread',    name: t.services.dreadlocks.name,       desc: t.services.dreadlocks.desc,       price: priceLabel(60) },
       { icon: 'crown',    name: t.services.wigInstallation.name,  desc: t.services.wigInstallation.desc,  price: priceLabel(50) },
-      { icon: 'droplet',  name: t.services.hairColoring.name,     desc: t.services.hairColoring.desc,     price: priceLabel(45) },
+      { icon: 'palette',  name: t.services.hairColoring.name,     desc: t.services.hairColoring.desc,     price: priceLabel(45) },
       { icon: 'sparkle',  name: t.services.womenStyling.name,     desc: t.services.womenStyling.desc,     price: priceLabel(30) },
       { icon: 'smile',    name: t.services.kidsHaircut.name,      desc: t.services.kidsHaircut.desc,      price: priceLabel(12) },
     ].map(s => ({

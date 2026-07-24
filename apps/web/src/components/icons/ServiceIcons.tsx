@@ -82,6 +82,27 @@ const PATHS: Record<string, ReactNode> = {
       <path d="M11 6.5V3h2v3.5" />
     </>
   ),
+  // Artist palette — hair colouring (🎨)
+  palette: (
+    <>
+      <path d="M12 3a9 9 0 1 0 0 18h2a2 2 0 0 0 0-4h-1a2 2 0 0 1 0-4h3a3 3 0 0 0 3-3 7 7 0 0 0-7-7z" />
+      <circle cx="8.5" cy="9" r="1" />
+      <circle cx="12" cy="7.2" r="1" />
+      <circle cx="7" cy="13" r="1" />
+    </>
+  ),
+  // Parallel wavy rows — cornrows (💫)
+  waves: (
+    <>
+      <path d="M3 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0" />
+      <path d="M3 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0" />
+      <path d="M3 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0" />
+    </>
+  ),
+  // Spiral — knotless / twisted styles (🌀)
+  swirl: (
+    <path d="M21 12a9 9 0 1 1-9-9 7 7 0 0 1 7 7 5 5 0 0 1-5 5 3 3 0 0 1-3-3" />
+  ),
 }
 
 /**
@@ -91,18 +112,28 @@ const PATHS: Record<string, ReactNode> = {
  * falls back to scissors. Keeps existing services working with zero DB changes.
  */
 const EMOJI_TO_ICON: Record<string, ServiceIconName> = {
+  // Current admin palette
   '✂️': 'scissors',
   '💈': 'pole',
   '🪒': 'razor',
   '👑': 'crown',
   '🧵': 'braid',
+  '💫': 'waves',
+  '🌀': 'swirl',
   '🔒': 'dread',
-  '🎨': 'droplet',
+  '🎨': 'palette',
+  '💧': 'droplet',
+  '🌿': 'flower',
   '👸': 'sparkle',
-  '💆': 'flower',
-  '✨': 'sparkle',
-  '🌟': 'smile',
+  '👶': 'smile',
   '💅': 'polish',
+  // Legacy aliases — emoji already stored on existing services but no longer
+  // offered in the picker. Kept so those services keep a meaningful icon.
+  '🔧': 'dread',    // Locs Retwist
+  '💁': 'sparkle',  // Women's Styling
+  '✨': 'sparkle',
+  '💆': 'flower',
+  '🌟': 'smile',
 }
 
 export function ServiceGlyph({
