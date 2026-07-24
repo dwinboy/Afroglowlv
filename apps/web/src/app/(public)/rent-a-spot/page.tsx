@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -240,27 +241,56 @@ export default function RentASpotPage() {
         <div className="absolute inset-0 bg-gradient-hero" />
         <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-gold-500/10 rounded-full blur-3xl" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl">
-            <div className="gold-line mb-6" />
-            <h1 className="section-title mb-6">
-              {isLt ? c.heroTitle[0] : 'Rent Your'} <span className="gold-shimmer">{isLt ? c.heroTitle[1] : 'Working Spot'}</span>
-            </h1>
-            <p className="text-xl text-gray-300 mb-8">
-              {isLt ? c.heroText : 'Join the Afroglow community. Premium workspace, built-in clients, zero overhead stress. Focus on what you do best.'}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              {(isLt ? [c.spotsAvailable(availableCount), c.clientsMonth, c.rated] : [
-                `${availableCount || 5} Spots Available`,
-                '200+ Clients/Month',
-                '5★ Rated Workspace',
-              ]).map(s => (
-                <div key={s} className="flex items-center gap-2 px-4 py-2 glass rounded-full">
-                  <CheckCircle size={14} className="text-gold-400" />
-                  <span className="text-sm text-gray-300">{s}</span>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="gold-line mb-6" />
+              <h1 className="section-title mb-6">
+                {isLt ? c.heroTitle[0] : 'Rent Your'} <span className="gold-shimmer">{isLt ? c.heroTitle[1] : 'Working Spot'}</span>
+              </h1>
+              <p className="text-xl text-gray-300 mb-8">
+                {isLt ? c.heroText : 'Join the Afroglow community. Premium workspace, built-in clients, zero overhead stress. Focus on what you do best.'}
+              </p>
+              <div className="flex flex-wrap gap-4">
+                {(isLt ? [c.spotsAvailable(availableCount), c.clientsMonth, c.rated] : [
+                  `${availableCount || 5} Spots Available`,
+                  '200+ Clients/Month',
+                  '5★ Rated Workspace',
+                ]).map(s => (
+                  <div key={s} className="flex items-center gap-2 px-4 py-2 glass rounded-full">
+                    <CheckCircle size={14} className="text-gold-400" />
+                    <span className="text-sm text-gray-300">{s}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Real studio photo — the actual workspace on offer */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.15, duration: 0.6 }}
+              className="relative"
+            >
+              <div className="absolute -inset-4 bg-gold-500/10 blur-3xl rounded-full" aria-hidden />
+              <div className="relative rounded-2xl overflow-hidden border border-luxury-border shadow-luxury">
+                <div className="relative aspect-[4/3]">
+                  <Image
+                    src="/images/studio/interior.jpg"
+                    alt={isLt ? 'Afroglow studijos interjeras Vilniuje — dvi kirpėjų darbo vietos su apšviestais veidrodžiais' : 'Afroglow studio interior in Vilnius — two barber stations with backlit mirrors'}
+                    fill
+                    priority
+                    className="object-cover grade-warm"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
                 </div>
-              ))}
-            </div>
-          </motion.div>
+                <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full glass-dark">
+                  <MapPin size={13} className="text-gold-400" />
+                  <span className="text-xs font-medium text-white">{isLt ? 'Afroglow studija · Vilnius' : 'Afroglow Studio · Vilnius'}</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
