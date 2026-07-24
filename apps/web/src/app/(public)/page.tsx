@@ -13,6 +13,7 @@ import { useI18n } from '@/contexts/I18nContext'
 import { api } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
 import WhatsAppBookingButton from '@/components/booking/WhatsAppBookingButton'
+import { ServiceIcon } from '@/components/icons/ServiceIcons'
 
 /* ── helpers ──────────────────────────────────── */
 const FadeIn = ({
@@ -203,14 +204,14 @@ export default function HomePage() {
   const { t, locale } = useI18n()
   const [publicStats, setPublicStats] = useState<PublicStats>(DEFAULT_PUBLIC_STATS)
   const services = useMemo(() => [
-    { icon: '✂️',  name: t.services.haircut.name,          desc: t.services.haircut.desc,          price: locale === 'lt' ? 'nuo €15' : 'from €15' },
-    { icon: '🪒',  name: t.services.beardTrim.name,        desc: t.services.beardTrim.desc,        price: locale === 'lt' ? 'nuo €10' : 'from €10' },
-    { icon: '🧵',  name: t.services.braiding.name,         desc: t.services.braiding.desc,         price: locale === 'lt' ? 'nuo €40' : 'from €40' },
-    { icon: '🔒',  name: t.services.dreadlocks.name,       desc: t.services.dreadlocks.desc,       price: locale === 'lt' ? 'nuo €60' : 'from €60' },
-    { icon: '👑',  name: t.services.wigInstallation.name,  desc: t.services.wigInstallation.desc,  price: locale === 'lt' ? 'nuo €50' : 'from €50' },
-    { icon: '🎨',  name: t.services.hairColoring.name,     desc: t.services.hairColoring.desc,     price: locale === 'lt' ? 'nuo €45' : 'from €45' },
-    { icon: '💫',  name: t.services.womenStyling.name,     desc: t.services.womenStyling.desc,     price: locale === 'lt' ? 'nuo €30' : 'from €30' },
-    { icon: '🌟',  name: t.services.kidsHaircut.name,      desc: t.services.kidsHaircut.desc,      price: locale === 'lt' ? 'nuo €12' : 'from €12' },
+    { icon: 'scissors', name: t.services.haircut.name,          desc: t.services.haircut.desc,          price: locale === 'lt' ? 'nuo €15' : 'from €15' },
+    { icon: 'razor',    name: t.services.beardTrim.name,        desc: t.services.beardTrim.desc,        price: locale === 'lt' ? 'nuo €10' : 'from €10' },
+    { icon: 'braid',    name: t.services.braiding.name,         desc: t.services.braiding.desc,         price: locale === 'lt' ? 'nuo €40' : 'from €40' },
+    { icon: 'dread',    name: t.services.dreadlocks.name,       desc: t.services.dreadlocks.desc,       price: locale === 'lt' ? 'nuo €60' : 'from €60' },
+    { icon: 'crown',    name: t.services.wigInstallation.name,  desc: t.services.wigInstallation.desc,  price: locale === 'lt' ? 'nuo €50' : 'from €50' },
+    { icon: 'droplet',  name: t.services.hairColoring.name,     desc: t.services.hairColoring.desc,     price: locale === 'lt' ? 'nuo €45' : 'from €45' },
+    { icon: 'sparkle',  name: t.services.womenStyling.name,     desc: t.services.womenStyling.desc,     price: locale === 'lt' ? 'nuo €30' : 'from €30' },
+    { icon: 'smile',    name: t.services.kidsHaircut.name,      desc: t.services.kidsHaircut.desc,      price: locale === 'lt' ? 'nuo €12' : 'from €12' },
   ], [locale, t])
 
   const gallery = useMemo(() => locale === 'lt' ? [
@@ -315,7 +316,7 @@ export default function HomePage() {
           alt="Afroglow barber preparing a client in the chair"
           fill
           priority
-          className="object-cover object-center"
+          className="object-cover object-center grade-warm"
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/85" />
@@ -423,8 +424,10 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, i) => (
               <FadeIn key={service.name} delay={i * 0.07} direction="up">
-                <Link href="/services" className="card-luxury p-6 block group cursor-pointer">
-                  <div className="text-4xl mb-4">{service.icon}</div>
+                <Link href="/services" className="card-luxury card-lift p-6 block group cursor-pointer">
+                  <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-gold-500/20 bg-gold-500/10 text-gold-400 transition-all duration-300 group-hover:scale-105 group-hover:border-gold-500/40 group-hover:bg-gold-500/20">
+                    <ServiceIcon name={service.icon} size={26} />
+                  </div>
                   <h3 className="font-semibold text-white group-hover:text-gold-400 transition-colors mb-2">
                     {service.name}
                   </h3>
@@ -457,14 +460,14 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {PROFESSIONALS.map((pro, i) => (
               <FadeIn key={pro.name} delay={i * 0.1} direction="up">
-                <div className="card-luxury overflow-hidden group">
+                <div className="card-luxury card-lift overflow-hidden group">
                   {/* Image */}
                   <div className="on-dark-media relative h-56 overflow-hidden">
                     <Image
                       src={pro.image}
                       alt={pro.name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="object-cover grade-warm group-hover:scale-105 transition-transform duration-500"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -599,7 +602,7 @@ export default function HomePage() {
                     width={720}
                     height={720}
                     className={cn(
-                      'w-full object-cover group-hover:scale-105 transition-transform duration-500',
+                      'w-full object-cover grade-warm group-hover:scale-105 transition-transform duration-500',
                       i === 0 ? 'h-80' : 'h-64',
                     )}
                   />

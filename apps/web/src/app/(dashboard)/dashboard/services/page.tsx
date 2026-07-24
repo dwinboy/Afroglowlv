@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Scissors, Plus, Eye, EyeOff } from 'lucide-react'
+import { ServiceGlyph } from '@/components/icons/ServiceIcons'
 import { api } from '@/contexts/AuthContext'
 import { formatPrice } from '@/lib/utils'
 
@@ -36,7 +37,9 @@ export default function DashboardServicesPage() {
             <div key={s.id} className={`card-luxury p-4 ${!s.isActive ? 'opacity-50' : ''}`}>
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">{s.icon ?? '✂️'}</span>
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gold-500/20 bg-gold-500/10 text-gold-400">
+                    <ServiceGlyph icon={s.icon} size={18} />
+                  </span>
                   <div>
                     <p className="text-white font-semibold text-sm">{s.name}</p>
                     <p className="text-xs text-gray-400">{s.category}</p>

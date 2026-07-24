@@ -6,6 +6,7 @@ import { Plus, Pencil, Trash2, X, Save, Eye, EyeOff, Star } from 'lucide-react'
 import { api } from '@/contexts/AuthContext'
 import { toast } from 'react-hot-toast'
 import { formatPrice, cn } from '@/lib/utils'
+import { ServiceGlyph } from '@/components/icons/ServiceIcons'
 
 interface Service {
   id:          string
@@ -21,7 +22,10 @@ interface Service {
 
 const CATEGORIES = ['Hair', 'Beard', 'Braids & Locs', 'Color', 'Treatments', 'Special']
 
-const ICONS = ['✂️','💈','🪒','👑','🧵','🔒','🎨','👸','💆','✨','🌟','💅']
+// Each emoji maps to a distinct gold line-icon (see ServiceGlyph). '✨' is
+// dropped from the palette as it duplicates '👸' (sparkle) but stays mapped
+// for any service that already stored it.
+const ICONS = ['✂️','💈','🪒','👑','🧵','🔒','🎨','👸','💆','🌟','💅']
 
 const EMPTY: Omit<Service, 'id'> = {
   name: '', category: 'Hair', description: '', price: 0,
@@ -158,7 +162,9 @@ export default function AdminServicesPage() {
                 <tr key={s.id} className={cn('hover:bg-luxury-surface/30 transition-colors', !s.isActive && 'opacity-50')}>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <span className="text-xl">{s.icon ?? '✂️'}</span>
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gold-500/20 bg-gold-500/10 text-gold-400">
+                        <ServiceGlyph icon={s.icon} size={16} />
+                      </span>
                       <div>
                         <div className="flex items-center gap-1.5">
                           <span className="font-medium text-white">{s.name}</span>
@@ -228,9 +234,9 @@ export default function AdminServicesPage() {
                   <div className="flex flex-wrap gap-2">
                     {ICONS.map(ic => (
                       <button key={ic} type="button" onClick={() => f('icon', ic)}
-                        className={cn('text-xl p-2 rounded-lg border transition-colors',
-                          form.icon === ic ? 'border-gold-500/60 bg-gold-500/10' : 'border-luxury-border hover:border-luxury-muted/50')}>
-                        {ic}
+                        className={cn('inline-flex h-10 w-10 items-center justify-center rounded-lg border transition-colors',
+                          form.icon === ic ? 'border-gold-500/60 bg-gold-500/10 text-gold-400' : 'border-luxury-border text-gray-400 hover:border-luxury-muted/50')}>
+                        <ServiceGlyph icon={ic} size={20} />
                       </button>
                     ))}
                   </div>

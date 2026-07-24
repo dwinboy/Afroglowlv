@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Clock, ChevronRight, Scissors } from 'lucide-react'
+import { ServiceGlyph } from '@/components/icons/ServiceIcons'
 import { cn } from '@/lib/utils'
 import { api } from '@/contexts/AuthContext'
 import { useI18n } from '@/contexts/I18nContext'
@@ -188,7 +189,9 @@ export default function ServicesPage() {
                     ) : null}
                     <div className="p-6 flex flex-1 flex-col">
                       <div className="flex items-start justify-between mb-4">
-                        <span className="text-3xl">{service.icon ?? '✂️'}</span>
+                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-gold-500/20 bg-gold-500/10 text-gold-400">
+                          <ServiceGlyph icon={service.icon} size={24} />
+                        </span>
                         <div className="flex flex-col items-end gap-1">
                           {service.isPopular && <span className="badge-gold text-xs">{copy.popular}</span>}
                           <span className="text-lg font-bold text-gradient-gold">€{service.price}</span>

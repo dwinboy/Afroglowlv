@@ -15,6 +15,7 @@ import { cn, formatPrice } from '@/lib/utils'
 import { api } from '@/contexts/AuthContext'
 import { useI18n } from '@/contexts/I18nContext'
 import WhatsAppBookingButton from '@/components/booking/WhatsAppBookingButton'
+import { ServiceGlyph } from '@/components/icons/ServiceIcons'
 
 const STEPS = ['Service', 'Professional', 'Date & Time', 'Details', 'Confirm']
 const LT_STEPS = ['Paslauga', 'Specialistas', 'Data ir laikas', 'Duomenys', 'Patvirtinimas']
@@ -304,7 +305,9 @@ export default function BookingPage() {
               {s.isPopular && (
                 <span className="absolute top-2 right-2 text-[10px] px-1.5 py-0.5 rounded-full bg-gold-500/20 text-gold-400 border border-gold-500/30">{copy.popular}</span>
               )}
-              <div className="text-3xl mb-3">{s.icon ?? '✂️'}</div>
+              <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-gold-500/20 bg-gold-500/10 text-gold-400">
+                <ServiceGlyph icon={s.icon} size={24} />
+              </div>
               <h3 className="font-semibold text-white text-sm mb-1">{s.name}</h3>
               <p className="text-xs text-gray-400 mb-2">{s.duration} {copy.min}</p>
               <span className="text-sm font-bold text-gradient-gold">{formatPrice(s.price)}</span>
@@ -482,7 +485,7 @@ export default function BookingPage() {
         <p className="text-gray-400 mb-8">{copy.confirmText}</p>
         <div className="card-luxury p-6 space-y-4">
           {[
-            { label: copy.summary[0], value: `${selectedService?.icon ?? ''} ${selectedService?.name}`.trim() },
+            { label: copy.summary[0], value: selectedService?.name ?? '' },
             { label: copy.summary[1], value: selectedProfessional?.user.fullName },
             { label: copy.summary[2], value: selectedDate?.toLocaleDateString(locale === 'lt' ? 'lt-LT' : 'en', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) },
             { label: copy.summary[3], value: selectedTime },

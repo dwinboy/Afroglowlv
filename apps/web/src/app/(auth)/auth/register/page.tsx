@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Scissors } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/contexts/AuthContext'
@@ -68,8 +68,8 @@ export default function RegisterPage() {
         <p className="label-luxury mb-3">I am a…</p>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { value: 'CUSTOMER', label: 'Customer', icon: '🙋', desc: 'Book appointments' },
-            { value: 'BARBER',   label: 'Professional', icon: '✂️', desc: 'Rent a spot & work' },
+            { value: 'CUSTOMER', label: 'Customer', Icon: User, desc: 'Book appointments' },
+            { value: 'BARBER',   label: 'Professional', Icon: Scissors, desc: 'Rent a spot & work' },
           ].map(r => (
             <label key={r.value} className="cursor-pointer">
               <input
@@ -84,7 +84,11 @@ export default function RegisterPage() {
                   ? 'border-gold-500 bg-gold-500/10 shadow-gold'
                   : 'border-luxury-border hover:border-gold-500/30',
               )}>
-                <div className="text-2xl mb-1">{r.icon}</div>
+                <div className="mb-2 flex justify-center">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold-500/20 bg-gold-500/10 text-gold-400">
+                    <r.Icon size={20} />
+                  </span>
+                </div>
                 <div className="text-sm font-semibold text-white">{r.label}</div>
                 <div className="text-xs text-gray-400">{r.desc}</div>
               </div>
